@@ -27,6 +27,7 @@ import io.wren.main.WrenModule;
 import io.wren.main.server.Server;
 import io.wren.main.wireprotocol.ssl.EmptyTlsDataProvider;
 import io.wren.server.module.BigQueryConnectorModule;
+import io.wren.server.module.CouchbaseConnectorModule;
 import io.wren.server.module.DuckDBConnectorModule;
 import io.wren.server.module.MainModule;
 import io.wren.server.module.PostgresConnectorModule;
@@ -34,7 +35,6 @@ import io.wren.server.module.PostgresWireProtocolModule;
 import io.wren.server.module.SQLGlotModule;
 import io.wren.server.module.SnowflakeConnectorModule;
 import io.wren.server.module.WebModule;
-import io.wren.server.module.CouchbaseConnectorModule;
 
 import static io.airlift.configuration.ConditionalModule.conditionalModule;
 

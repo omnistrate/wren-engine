@@ -20,11 +20,14 @@ import io.wren.base.Column;
 import io.wren.base.Parameter;
 import io.wren.base.WrenException;
 import io.wren.base.config.CouchbaseConfig;
-import io.wren.base.config.SnowflakeConfig;
 import io.wren.connector.postgres.PostgresClient;
-import io.wren.main.connector.snowflake.SnowflakeRecordIterator;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 

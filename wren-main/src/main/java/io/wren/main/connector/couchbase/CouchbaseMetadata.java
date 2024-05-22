@@ -25,9 +25,6 @@ import io.wren.base.config.ConfigManager;
 import io.wren.base.config.CouchbaseConfig;
 import io.wren.base.config.WrenConfig;
 import io.wren.connector.StorageClient;
-import io.wren.main.connector.couchbase.CouchbaseClient;
-import io.wren.main.connector.couchbase.CouchbaseFunctionBuilder;
-import io.wren.main.connector.couchbase.CouchbaseRecordIterator;
 import io.wren.main.metadata.Metadata;
 import io.wren.main.pgcatalog.builder.PgFunctionBuilder;
 
