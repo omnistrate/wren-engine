@@ -19,17 +19,13 @@ import io.wren.base.WrenMDL;
 import io.wren.base.client.duckdb.DuckDBConfig;
 import io.wren.base.client.duckdb.DuckDBConnectorConfig;
 import io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig;
-import io.wren.base.config.BigQueryConfig;
-import io.wren.base.config.ConfigManager;
-import io.wren.base.config.PostgresConfig;
-import io.wren.base.config.PostgresWireProtocolConfig;
-import io.wren.base.config.SnowflakeConfig;
-import io.wren.base.config.WrenConfig;
+import io.wren.base.config.*;
 import io.wren.base.dto.Manifest;
 import io.wren.main.WrenMetastore;
 import io.wren.main.connector.bigquery.BigQueryMetadata;
 import io.wren.main.connector.bigquery.BigQuerySqlConverter;
 import io.wren.testing.AbstractSqlConverterTest;
+import org.checkerframework.checker.units.qual.C;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -68,7 +64,8 @@ public class TestBigQuerySqlConverter
                 new PostgresWireProtocolConfig(),
                 new DuckdbS3StyleStorageConfig(),
                 new DuckDBConnectorConfig(),
-                new SnowflakeConfig());
+                new SnowflakeConfig(),
+                new CouchbaseConfig());
 
         BigQueryMetadata bigQueryMetadata = new BigQueryMetadata(configManager);
         WrenMetastore wrenMetastore = new WrenMetastore();

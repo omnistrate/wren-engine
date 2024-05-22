@@ -59,6 +59,7 @@ import static io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig.DUCKDB_STORA
 import static io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig.DUCKDB_STORAGE_SECRET_KEY;
 import static io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig.DUCKDB_STORAGE_URL_STYLE;
 import static io.wren.base.client.duckdb.FileUtil.ARCHIVED;
+import static io.wren.base.config.CouchbaseConfig.*;
 import static io.wren.base.config.PostgresConfig.POSTGRES_JDBC_URL;
 import static io.wren.base.config.PostgresConfig.POSTGRES_PASSWORD;
 import static io.wren.base.config.PostgresConfig.POSTGRES_USER;
@@ -89,6 +90,7 @@ public class ConfigManager
     private Optional<DuckdbS3StyleStorageConfig> duckdbS3StyleStorageConfig;
     private Optional<DuckDBConnectorConfig> duckDBConnectorConfig;
     private Optional<SnowflakeConfig> snowflakeConfig;
+    private Optional<CouchbaseConfig> couchbaseConfig;
 
     private final Map<String, String> configs = new HashMap<>();
     // All configs set by user and config files. It's used to sync with config file.
@@ -106,7 +108,8 @@ public class ConfigManager
             PostgresWireProtocolConfig postgresWireProtocolConfig,
             DuckdbS3StyleStorageConfig duckdbS3StyleStorageConfig,
             DuckDBConnectorConfig duckDBConnectorConfig,
-            SnowflakeConfig snowflakeConfig)
+            SnowflakeConfig snowflakeConfig,
+            CouchbaseConfig couchbaseConfig)
     {
         this.wrenConfig = Optional.of(wrenConfig);
         this.postgresConfig = Optional.of(postgresConfig);
@@ -116,6 +119,7 @@ public class ConfigManager
         this.duckdbS3StyleStorageConfig = Optional.of(duckdbS3StyleStorageConfig);
         this.duckDBConnectorConfig = Optional.of(duckDBConnectorConfig);
         this.snowflakeConfig = Optional.of(snowflakeConfig);
+        this.couchbaseConfig = Optional.of(couchbaseConfig);
 
         initConfig(
                 wrenConfig,
@@ -125,7 +129,8 @@ public class ConfigManager
                 postgresWireProtocolConfig,
                 duckdbS3StyleStorageConfig,
                 duckDBConnectorConfig,
-                snowflakeConfig);
+                snowflakeConfig,
+                couchbaseConfig);
 
         try {
             setConfigs.putAll(loadPropertiesFrom(configFile));
@@ -143,7 +148,8 @@ public class ConfigManager
             PostgresWireProtocolConfig postgresWireProtocolConfig,
             DuckdbS3StyleStorageConfig duckdbS3StyleStorageConfig,
             DuckDBConnectorConfig duckDBConnectorConfig,
-            SnowflakeConfig snowflakeConfig)
+            SnowflakeConfig snowflakeConfig,
+            CouchbaseConfig couchbaseConfig)
     {
         initConfig(WrenConfig.WREN_DIRECTORY, wrenConfig.getWrenMDLDirectory().getPath(), false, true);
         initConfig(WrenConfig.WREN_DATASOURCE_TYPE, Optional.ofNullable(wrenConfig.getDataSourceType()).map(Enum::name).orElse(null), true, false);
@@ -183,6 +189,12 @@ public class ConfigManager
         initConfig(SNOWFLAKE_SCHEMA, snowflakeConfig.getSchema().orElse(null), true, false);
         initConfig(SNOWFLAKE_WAREHOUSE, snowflakeConfig.getWarehouse().orElse(null), true, false);
         initConfig(SNOWFLAKE_ROLE, snowflakeConfig.getRole().orElse(null), true, false);
+        initConfig(COUCHBASE_JDBC_URL, couchbaseConfig.getJdbcUrl(), true, false);
+        initConfig(COUCHBASE_SERVER, couchbaseConfig.getServer(), true, false);
+        initConfig(COUCHBASE_USER, couchbaseConfig.getUser(), true, false);
+        initConfig(COUCHBASE_PASSWORD, couchbaseConfig.getPassword(), true, false);
+        initConfig(COUCHBASE_N1QL_PORT, couchbaseConfig.getN1QLPort().orElse(""), true, false);
+        initConfig(COUCHBASE_USE_SSL, String.valueOf(couchbaseConfig.getUseSSL().orElse(true)), true, false);
     }
 
     private void initConfig(String key, String value, boolean requiredReload, boolean isStatic)
@@ -254,6 +266,13 @@ public class ConfigManager
             return (T) snowflakeConfig.orElseGet(() -> {
                 SnowflakeConfig result = getSnowflakeConfig();
                 snowflakeConfig = Optional.of(result);
+                return result;
+            });
+        }
+        if (config == CouchbaseConfig.class) {
+            return (T) couchbaseConfig.orElseGet(() -> {
+                CouchbaseConfig result = getCouchbaseConfig();
+                couchbaseConfig = Optional.of(result);
                 return result;
             });
         }
@@ -346,6 +365,18 @@ public class ConfigManager
         return config;
     }
 
+    private CouchbaseConfig getCouchbaseConfig()
+    {
+        CouchbaseConfig config = new CouchbaseConfig();
+        config.setJdbcUrl(configs.get(COUCHBASE_JDBC_URL));
+        config.setUser(configs.get(COUCHBASE_USER));
+        config.setPassword(configs.get(COUCHBASE_PASSWORD));
+        config.setServer(configs.get(COUCHBASE_SERVER));
+        config.setN1QLPort(configs.get(COUCHBASE_N1QL_PORT));
+        config.setUseSSL(Boolean.parseBoolean(configs.get(COUCHBASE_USE_SSL)));
+        return config;
+    }
+
     public synchronized boolean setConfigs(List<ConfigEntry> configEntries, boolean reset)
     {
         if (reset) {
@@ -406,7 +437,8 @@ public class ConfigManager
                 new PostgresWireProtocolConfig(),
                 new DuckdbS3StyleStorageConfig(),
                 new DuckDBConnectorConfig(),
-                new SnowflakeConfig());
+                new SnowflakeConfig(),
+                new CouchbaseConfig());
     }
 
     private void syncFile(Map<String, String> updated)
