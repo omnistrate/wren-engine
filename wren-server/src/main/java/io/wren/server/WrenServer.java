@@ -34,6 +34,7 @@ import io.wren.server.module.PostgresWireProtocolModule;
 import io.wren.server.module.SQLGlotModule;
 import io.wren.server.module.SnowflakeConnectorModule;
 import io.wren.server.module.WebModule;
+import io.wren.server.module.CouchbaseConnectorModule;
 
 import static io.airlift.configuration.ConditionalModule.conditionalModule;
 
@@ -59,6 +60,7 @@ public class WrenServer
                 new PostgresConnectorModule(),
                 new DuckDBConnectorModule(),
                 new SnowflakeConnectorModule(),
+                new CouchbaseConnectorModule(),
                 new WrenModule(),
                 conditionalModule(PostgresWireProtocolConfig.class, PostgresWireProtocolConfig::isPgWireProtocolEnabled, new CacheModule()),
                 conditionalModule(PostgresWireProtocolConfig.class, PostgresWireProtocolConfig::isPgWireProtocolEnabled, new PostgresWireProtocolModule(new EmptyTlsDataProvider())),

@@ -22,12 +22,7 @@ import io.wren.base.WrenTypes;
 import io.wren.base.client.duckdb.DuckDBConfig;
 import io.wren.base.client.duckdb.DuckDBConnectorConfig;
 import io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig;
-import io.wren.base.config.BigQueryConfig;
-import io.wren.base.config.ConfigManager;
-import io.wren.base.config.PostgresConfig;
-import io.wren.base.config.PostgresWireProtocolConfig;
-import io.wren.base.config.SnowflakeConfig;
-import io.wren.base.config.WrenConfig;
+import io.wren.base.config.*;
 import io.wren.base.dto.Column;
 import io.wren.base.dto.Model;
 import io.wren.cache.CacheInfoPair;
@@ -110,7 +105,8 @@ public class TestCacheTaskManager
                 new PostgresWireProtocolConfig(),
                 new DuckdbS3StyleStorageConfig(),
                 new DuckDBConnectorConfig(),
-                new SnowflakeConfig());
+                new SnowflakeConfig(),
+                new CouchbaseConfig());
 
         try (CacheTaskManager taskManager = new CacheTaskManager(duckDBConfig, new PgMetastoreImpl(configManager, getInstance(Key.get(DuckDBSqlConverter.class))))) {
             assertThatCode(taskManager::checkCacheMemoryLimit).hasMessageMatching("Cache memory limit exceeded. Usage: .* bytes, Limit: 0.0 bytes");

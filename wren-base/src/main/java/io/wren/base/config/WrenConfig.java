@@ -30,7 +30,8 @@ public class WrenConfig
         BIGQUERY,
         POSTGRES,
         DUCKDB,
-        SNOWFLAKE
+        SNOWFLAKE,
+        COUCHBASE,
     }
 
     private File wrenMDLDirectory = new File("etc/mdl");

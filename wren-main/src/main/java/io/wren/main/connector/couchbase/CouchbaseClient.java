@@ -1,0 +1,119 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.wren.main.connector.couchbase;
+
+import com.google.common.collect.ImmutableList;
+import io.airlift.log.Logger;
+import io.wren.base.Column;
+import io.wren.base.Parameter;
+import io.wren.base.WrenException;
+import io.wren.base.config.CouchbaseConfig;
+import io.wren.base.config.SnowflakeConfig;
+import io.wren.connector.postgres.PostgresClient;
+import io.wren.main.connector.snowflake.SnowflakeRecordIterator;
+
+import java.sql.*;
+import java.util.List;
+import java.util.Properties;
+
+import static io.wren.base.metadata.StandardErrorCode.GENERIC_USER_ERROR;
+import static io.wren.main.connector.couchbase.CouchbaseType.toPGType;
+import static java.util.Objects.requireNonNull;
+
+public class CouchbaseClient
+{
+    private static final Logger LOG = Logger.get(PostgresClient.class);
+
+    private final CouchbaseConfig config;
+
+    public CouchbaseClient(CouchbaseConfig config)
+    {
+        this.config = requireNonNull(config, "config is null");
+    }
+
+    public Connection createConnection()
+            throws SQLException
+    {
+        try {
+            Class.forName("cdata.jdbc.couchbase.CouchbaseDriver");
+        }
+        catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        Properties props = new Properties();
+        props.setProperty("User", config.getUser());
+        props.setProperty("Password", config.getPassword());
+        props.setProperty("Server", config.getPassword());
+        config.getUseSSL().ifPresent(useSSL -> props.setProperty("UseSSL", String.valueOf(useSSL)));
+        config.getN1QLPort().ifPresent(n1qlPort -> props.setProperty("N1QLPort", n1qlPort));
+
+        Connection connection = DriverManager.getConnection(config.getJdbcUrl(), props);
+
+        Statement statement = connection.createStatement();
+        statement.execute("ALTER SESSION SET TIMEZONE='UTC'");
+        statement.execute("ALTER SESSION SET TIMESTAMP_NTZ_OUTPUT_FORMAT='YYYY-MM-DD HH24:MI:SS.FF'");
+
+        return connection;
+    }
+
+    public void execute(String sql)
+    {
+        try (Connection connection = createConnection()) {
+            connection.createStatement().execute(sql);
+        }
+        catch (Exception e) {
+            LOG.error(e, "Error executing DDL");
+            throw new WrenException(GENERIC_USER_ERROR, e);
+        }
+    }
+
+    public CouchbaseRecordIterator query(String sql, List<Parameter> parameters)
+    {
+        try {
+            return CouchbaseRecordIterator.of(createConnection(), sql, parameters);
+        }
+        catch (Exception e) {
+            LOG.error(e, "Error executing query");
+            throw new WrenException(GENERIC_USER_ERROR, e);
+        }
+    }
+
+    public List<Column> describe(String sql, List<Parameter> parameters)
+    {
+        try (Connection connection = createConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            for (int i = 0; i < parameters.size(); i++) {
+                statement.setObject(i + 1, parameters.get(i).getValue());
+            }
+
+            return buildColumns(statement.getMetaData());
+        }
+        catch (SQLException e) {
+            LOG.error(e, "Error executing describe");
+            throw new WrenException(GENERIC_USER_ERROR, e);
+        }
+    }
+
+    public static List<Column> buildColumns(ResultSetMetaData metaData)
+            throws SQLException
+    {
+        ImmutableList.Builder<Column> builder = ImmutableList.builder();
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+            builder.add(new Column(metaData.getColumnName(i), toPGType(metaData.getColumnType(i))));
+        }
+        return builder.build();
+    }
+}

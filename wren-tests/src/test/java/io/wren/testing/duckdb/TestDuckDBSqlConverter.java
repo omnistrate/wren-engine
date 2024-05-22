@@ -18,12 +18,7 @@ import io.wren.base.SessionContext;
 import io.wren.base.client.duckdb.DuckDBConfig;
 import io.wren.base.client.duckdb.DuckDBConnectorConfig;
 import io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig;
-import io.wren.base.config.BigQueryConfig;
-import io.wren.base.config.ConfigManager;
-import io.wren.base.config.PostgresConfig;
-import io.wren.base.config.PostgresWireProtocolConfig;
-import io.wren.base.config.SnowflakeConfig;
-import io.wren.base.config.WrenConfig;
+import io.wren.base.config.*;
 import io.wren.main.connector.duckdb.DuckDBMetadata;
 import io.wren.main.connector.duckdb.DuckDBSqlConverter;
 import io.wren.testing.AbstractSqlConverterTest;
@@ -56,7 +51,8 @@ public class TestDuckDBSqlConverter
                 new PostgresWireProtocolConfig(),
                 new DuckdbS3StyleStorageConfig(),
                 new DuckDBConnectorConfig(),
-                new SnowflakeConfig());
+                new SnowflakeConfig(),
+                new CouchbaseConfig());
 
         DuckDBMetadata metadata = new DuckDBMetadata(configManager);
 
