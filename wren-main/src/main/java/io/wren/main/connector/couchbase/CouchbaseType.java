@@ -15,7 +15,19 @@
 package io.wren.main.connector.couchbase;
 
 import io.wren.base.WrenException;
-import io.wren.base.type.*;
+import io.wren.base.type.BooleanType;
+import io.wren.base.type.ByteaType;
+import io.wren.base.type.DateType;
+import io.wren.base.type.DoubleType;
+import io.wren.base.type.IntegerType;
+import io.wren.base.type.NumericType;
+import io.wren.base.type.PGType;
+import io.wren.base.type.RealType;
+import io.wren.base.type.SmallIntType;
+import io.wren.base.type.TimestampType;
+import io.wren.base.type.TimestampWithTimeZoneType;
+import io.wren.base.type.TinyIntType;
+import io.wren.base.type.VarcharType;
 
 import java.sql.Types;
 import java.util.Arrays;

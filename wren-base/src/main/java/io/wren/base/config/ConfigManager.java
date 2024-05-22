@@ -59,7 +59,12 @@ import static io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig.DUCKDB_STORA
 import static io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig.DUCKDB_STORAGE_SECRET_KEY;
 import static io.wren.base.client.duckdb.DuckdbS3StyleStorageConfig.DUCKDB_STORAGE_URL_STYLE;
 import static io.wren.base.client.duckdb.FileUtil.ARCHIVED;
-import static io.wren.base.config.CouchbaseConfig.*;
+import static io.wren.base.config.CouchbaseConfig.COUCHBASE_JDBC_URL;
+import static io.wren.base.config.CouchbaseConfig.COUCHBASE_N1QL_PORT;
+import static io.wren.base.config.CouchbaseConfig.COUCHBASE_PASSWORD;
+import static io.wren.base.config.CouchbaseConfig.COUCHBASE_SERVER;
+import static io.wren.base.config.CouchbaseConfig.COUCHBASE_USER;
+import static io.wren.base.config.CouchbaseConfig.COUCHBASE_USE_SSL;
 import static io.wren.base.config.PostgresConfig.POSTGRES_JDBC_URL;
 import static io.wren.base.config.PostgresConfig.POSTGRES_PASSWORD;
 import static io.wren.base.config.PostgresConfig.POSTGRES_USER;
@@ -82,6 +87,10 @@ import static java.util.stream.Collectors.toMap;
 public class ConfigManager
 {
     private static final Logger LOG = Logger.get(ConfigManager.class);
+    private final Map<String, String> configs = new HashMap<>();
+    private final String configFile = System.getProperty("config");
+    private final Set<String> requiredReload = new HashSet<>();
+    private final Set<String> staticConfigs = new HashSet<>();
     private Optional<WrenConfig> wrenConfig;
     private Optional<PostgresConfig> postgresConfig;
     private Optional<BigQueryConfig> bigQueryConfig;
@@ -91,13 +100,8 @@ public class ConfigManager
     private Optional<DuckDBConnectorConfig> duckDBConnectorConfig;
     private Optional<SnowflakeConfig> snowflakeConfig;
     private Optional<CouchbaseConfig> couchbaseConfig;
-
-    private final Map<String, String> configs = new HashMap<>();
     // All configs set by user and config files. It's used to sync with config file.
     private Properties setConfigs = new Properties();
-    private final String configFile = System.getProperty("config");
-    private final Set<String> requiredReload = new HashSet<>();
-    private final Set<String> staticConfigs = new HashSet<>();
 
     @Inject
     public ConfigManager(
@@ -485,11 +489,6 @@ public class ConfigManager
 
     public static class ConfigEntry
     {
-        public static ConfigEntry configEntry(String name, String value)
-        {
-            return new ConfigEntry(name, value);
-        }
-
         private final String name;
         private final String value;
 
@@ -500,6 +499,11 @@ public class ConfigManager
         {
             this.name = name;
             this.value = value == null || value.isEmpty() ? null : value;
+        }
+
+        public static ConfigEntry configEntry(String name, String value)
+        {
+            return new ConfigEntry(name, value);
         }
 
         @JsonProperty

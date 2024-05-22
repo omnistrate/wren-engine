@@ -18,7 +18,13 @@ import io.wren.base.Column;
 import io.wren.base.ConnectorRecordIterator;
 import io.wren.base.Parameter;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
