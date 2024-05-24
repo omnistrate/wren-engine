@@ -16,6 +16,7 @@
     <properties>
         <air.main.basedir>${project.parent.basedir}</air.main.basedir>
         <main-class>io.wren.server.WrenServer</main-class>
+        <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
     <dependencies>

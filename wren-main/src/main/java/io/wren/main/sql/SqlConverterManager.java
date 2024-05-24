@@ -20,6 +20,7 @@ import io.wren.base.config.ConfigManager;
 import io.wren.base.config.WrenConfig;
 import io.wren.base.sql.SqlConverter;
 import io.wren.main.connector.bigquery.BigQuerySqlConverter;
+import io.wren.main.connector.couchbase.CouchbaseSqlConverter;
 import io.wren.main.connector.duckdb.DuckDBSqlConverter;
 import io.wren.main.connector.postgres.PostgresSqlConverter;
 import io.wren.main.connector.snowflake.SnowflakeSqlConverter;
@@ -33,6 +34,7 @@ public final class SqlConverterManager
     private final PostgresSqlConverter postgresSqlConverter;
     private final DuckDBSqlConverter duckDBSqlConverter;
     private final SnowflakeSqlConverter snowflakeSqlConverter;
+    private final CouchbaseSqlConverter couchbaseSqlConverter;
     private final ConfigManager configManager;
     private WrenConfig.DataSourceType dataSourceType;
     private SqlConverter delegate;
@@ -43,13 +45,15 @@ public final class SqlConverterManager
             BigQuerySqlConverter bigQuerySqlConverter,
             PostgresSqlConverter postgresSqlConverter,
             DuckDBSqlConverter duckDBSqlConverter,
-            SnowflakeSqlConverter snowflakeSqlConverter)
+            SnowflakeSqlConverter snowflakeSqlConverter,
+            CouchbaseSqlConverter couchbaseSqlConverter)
     {
         this.configManager = requireNonNull(configManager, "configManager is null");
         this.bigQuerySqlConverter = requireNonNull(bigQuerySqlConverter, "bigQuerySqlConverter is null");
         this.postgresSqlConverter = requireNonNull(postgresSqlConverter, "postgresSqlConverter is null");
         this.duckDBSqlConverter = requireNonNull(duckDBSqlConverter, "duckDBSqlConverter is null");
         this.snowflakeSqlConverter = requireNonNull(snowflakeSqlConverter, "snowflakeSqlConverter is null");
+        this.couchbaseSqlConverter = requireNonNull(couchbaseSqlConverter, "couchbaseSqlConverter is null");
         this.dataSourceType = requireNonNull(configManager.getConfig(WrenConfig.class).getDataSourceType(), "dataSourceType is null");
         changeDelegate(dataSourceType);
     }
@@ -69,6 +73,8 @@ public final class SqlConverterManager
             case SNOWFLAKE:
                 delegate = snowflakeSqlConverter;
                 break;
+            case COUCHBASE:
+                delegate = couchbaseSqlConverter;
             default:
                 throw new UnsupportedOperationException("Unsupported data source type: " + dataSourceType);
         }

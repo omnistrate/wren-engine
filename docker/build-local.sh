@@ -20,10 +20,10 @@ cp ./entrypoint.sh ${WORK_DIR}
 
 CONTAINER="wren-engine:${WREN_VERSION}"
 
-docker build ${WORK_DIR} --pull --platform linux/amd64 -f Dockerfile -t ${CONTAINER}-amd64 --build-arg "WREN_VERSION=${WREN_VERSION}"
+#docker build ${WORK_DIR} --pull --platform linux/amd64 -f Dockerfile -t ${CONTAINER}-amd64 --build-arg "WREN_VERSION=${WREN_VERSION}"
 docker build ${WORK_DIR} --pull --platform linux/arm64 -f Dockerfile -t ${CONTAINER}-arm64 --build-arg "WREN_VERSION=${WREN_VERSION}"
 
 rm -r ${WORK_DIR}
 
-docker image inspect -f '🚀 Built {{.RepoTags}} {{.Id}}' ${CONTAINER}-amd64
+#docker image inspect -f '🚀 Built {{.RepoTags}} {{.Id}}' ${CONTAINER}-amd64
 docker image inspect -f '🚀 Built {{.RepoTags}} {{.Id}}' ${CONTAINER}-arm64

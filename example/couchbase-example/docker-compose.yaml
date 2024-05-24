@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  engine:
+    image: wren-engine:0.4.5-SNAPSHOT-arm64
+    platform: ${PLATFORM}
+    ports:
+      - 8080:8080
+      - 7432:7432
+    volumes:
+      - ./etc:/usr/src/app/etc
+    environment:
+      - SQLGLOT_PORT=8000

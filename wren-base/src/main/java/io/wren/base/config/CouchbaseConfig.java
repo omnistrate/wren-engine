@@ -32,7 +32,7 @@ public class CouchbaseConfig
     private String password;
     private String server;
     private String n1QLPort = "";
-    private Boolean useSSL = Boolean.TRUE;
+    private Boolean useSSL = Boolean.FALSE;
 
     public String getJdbcUrl()
     {

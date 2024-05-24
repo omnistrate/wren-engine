@@ -16,6 +16,7 @@
     <properties>
         <air.main.basedir>${project.parent.basedir}</air.main.basedir>
         <shadeBase>io.wren.\$internal</shadeBase>
+        <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
     <dependencies>

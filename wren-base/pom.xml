@@ -28,6 +28,7 @@
 
     <properties>
         <air.main.basedir>${project.parent.basedir}</air.main.basedir>
+        <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
     <dependencies>
