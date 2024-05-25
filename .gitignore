@@ -18,3 +18,5 @@ wren-server/etc
 __pycache__/
 venv/
 **/poetry.lock
+cdata.jdbc.couchbase.lic
+wren-sqlglot-server/.venv/

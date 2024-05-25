@@ -271,5 +271,11 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>cdata.jdbc.couchbase</groupId>
+            <artifactId>CouchbaseDriver</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

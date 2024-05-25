@@ -61,6 +61,11 @@ public class CouchbaseMetadata
         client.execute(format("CREATE SCHEMA %s", name));
     }
 
+    public List<TableColumnMetadata> getSchema()
+    {
+        return client.getSchema();
+    }
+
     @Override
     public void dropSchemaIfExists(String name)
     {
@@ -93,7 +98,7 @@ public class CouchbaseMetadata
         catch (Exception e) {
             LOG.error(e);
             LOG.error("Failed SQL: %s", sql);
-            throw new RuntimeException(e);
+            throw new WrenException(GENERIC_INTERNAL_ERROR, e);
         }
     }
 
