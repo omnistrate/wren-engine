@@ -26,6 +26,7 @@ import io.wren.main.pgcatalog.PgCatalogManagerImpl;
 import io.wren.main.web.AnalysisResource;
 import io.wren.main.web.CacheResource;
 import io.wren.main.web.ConfigResource;
+import io.wren.main.web.CouchbaseResource;
 import io.wren.main.web.DuckDBResource;
 import io.wren.main.web.MDLResource;
 import io.wren.main.web.WrenExceptionMapper;
@@ -43,6 +44,7 @@ public class WebModule
         jaxrsBinder(binder).bind(AnalysisResource.class);
         jaxrsBinder(binder).bind(ConfigResource.class);
         jaxrsBinder(binder).bind(DuckDBResource.class);
+        jaxrsBinder(binder).bind(CouchbaseResource.class);
         jaxrsBinder(binder).bindInstance(new WrenExceptionMapper());
         binder.bind(PreviewService.class).in(Scopes.SINGLETON);
         binder.bind(ValidationService.class).in(Scopes.SINGLETON);

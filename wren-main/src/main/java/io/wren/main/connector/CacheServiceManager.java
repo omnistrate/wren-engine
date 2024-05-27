@@ -61,10 +61,10 @@ public final class CacheServiceManager
             case POSTGRES:
                 delegate = postgresCacheService;
                 break;
-            case DUCKDB:
-            case SNOWFLAKE:
+            case DUCKDB, SNOWFLAKE, COUCHBASE:
                 delegate = nopCacheService;
                 break;
+
             default:
                 throw new UnsupportedOperationException("Unsupported data source type: " + dataSourceType);
         }

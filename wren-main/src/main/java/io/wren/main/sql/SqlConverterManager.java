@@ -75,6 +75,8 @@ public final class SqlConverterManager
                 break;
             case COUCHBASE:
                 delegate = couchbaseSqlConverter;
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unsupported data source type: " + dataSourceType);
         }

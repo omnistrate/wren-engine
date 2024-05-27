@@ -83,6 +83,7 @@ public final class MetadataManager
             case COUCHBASE:
                 delegate = couchbaseMetadata;
                 break;
+
             default:
                 throw new UnsupportedOperationException("Unsupported data source type: " + dataSourceType);
         }

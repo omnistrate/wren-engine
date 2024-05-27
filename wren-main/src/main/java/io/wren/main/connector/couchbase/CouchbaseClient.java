@@ -21,10 +21,13 @@ import io.wren.base.Parameter;
 import io.wren.base.WrenException;
 import io.wren.base.config.CouchbaseConfig;
 import io.wren.connector.postgres.PostgresClient;
+import org.postgresql.Driver;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,12 +52,7 @@ public class CouchbaseClient
     public Connection createConnection()
             throws SQLException
     {
-        try {
-            Class.forName("cdata.jdbc.couchbase.CouchbaseDriver");
-        }
-        catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        cdata.jdbc.couchbase.CouchbaseDriver.register();
 
         Properties props = new Properties();
         props.setProperty("User", config.getUser());
@@ -66,10 +64,45 @@ public class CouchbaseClient
         Connection connection = DriverManager.getConnection(config.getJdbcUrl(), props);
 
         Statement statement = connection.createStatement();
-        statement.execute("ALTER SESSION SET TIMEZONE='UTC'");
-        statement.execute("ALTER SESSION SET TIMESTAMP_NTZ_OUTPUT_FORMAT='YYYY-MM-DD HH24:MI:SS.FF'");
+        statement.execute("SELECT 1");
 
         return connection;
+    }
+
+    // Retrieve all table metadata in the format
+
+    /**
+     *       'SELECT \
+     *       table_catalog, table_schema, table_name, column_name, ordinal_position, is_nullable, data_type\
+     *       FROM INFORMATION_SCHEMA.COLUMNS;';
+     */
+    public List<TableColumnMetadata> getSchema()
+    {
+        try (Connection connection = createConnection()) {
+            DatabaseMetaData metaData = connection.getMetaData();
+            try (ResultSet tables = metaData.getTables(null, null, null, new String[] {"TABLE"})) {
+                ImmutableList.Builder<TableColumnMetadata> builder = ImmutableList.builder();
+                while (tables.next()) {
+                    String tableName = tables.getString("TABLE_NAME");
+                    String tableSchema = tables.getString("TABLE_SCHEM");
+                    String tableCatalog = tables.getString("TABLE_CAT");
+                    try (ResultSet columns = metaData.getColumns(null, null, tableName, null)) {
+                        while (columns.next()) {
+                            String columnName = columns.getString("COLUMN_NAME");
+                            int ordinalPosition = columns.getInt("ORDINAL_POSITION");
+                            boolean isNullable = columns.getBoolean("IS_NULLABLE");
+                            String dataType = columns.getString("DATA_TYPE");
+                            builder.add(new TableColumnMetadata(tableCatalog, tableSchema, tableName, columnName, ordinalPosition, isNullable, dataType));
+                        }
+                    }
+                }
+                return builder.build();
+            }
+        }
+        catch (SQLException e) {
+            LOG.error(e, "Error executing getSchema");
+            throw new WrenException(GENERIC_USER_ERROR, e);
+        }
     }
 
     public void execute(String sql)
