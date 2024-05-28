@@ -17,6 +17,7 @@ WORK_DIR="$(mktemp -d)"
 cp ${SOURCE_DIR}wren-server/target/wren-server-${WREN_VERSION}-executable.jar ${WORK_DIR}
 cp -r ${SOURCE_DIR}wren-sqlglot-server ${WORK_DIR}
 cp ./entrypoint.sh ${WORK_DIR}
+cp ${SOURCE_DIR}wren-server/lib/cdata.jdbc.couchbase.lic ${WORK_DIR}/cdata.jdbc.couchbase.lic
 
 CONTAINER="wren-engine:${WREN_VERSION}"
 
