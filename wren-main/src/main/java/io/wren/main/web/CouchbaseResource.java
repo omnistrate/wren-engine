@@ -52,19 +52,19 @@ public class CouchbaseResource
     public void query(
             String statement,
             @Suspended AsyncResponse asyncResponse)
-            throws Exception {
+            throws Exception
+    {
         supplyAsync(() ->
         {
             try (ConnectorRecordIterator iterator = metadata.directQuery(statement, ImmutableList.of())) {
                 ImmutableList.Builder<Object[]> data = ImmutableList.builder();
-                while (iterator.hasNext())
-                {
+                while (iterator.hasNext()) {
                     data.add(iterator.next());
                 }
                 return new QueryResultDto(iterator.getColumns(), data.build());
             } catch (Exception e)
             {
-               throw new WrenException(GENERIC_INTERNAL_ERROR, e.getMessage());
+                throw new WrenException(GENERIC_INTERNAL_ERROR, e.getMessage());
             }
         }).whenComplete(bindAsyncResponse(asyncResponse));
     }
@@ -88,34 +88,34 @@ public class CouchbaseResource
     @Path("/settings/init-sql")
     public void setInitSQL(String sql, @Suspended AsyncResponse asyncResponse)
     {
-        supplyAsync(()->null).whenComplete(bindAsyncResponse(asyncResponse));
+        supplyAsync(() -> null).whenComplete(bindAsyncResponse(asyncResponse));
     }
 
     @PATCH
     @Path("/settings/init-sql")
     public void updateInitSQL(String sql, @Suspended AsyncResponse asyncResponse)
     {
-        supplyAsync(()->null).whenComplete(bindAsyncResponse(asyncResponse));
+        supplyAsync(() -> null).whenComplete(bindAsyncResponse(asyncResponse));
     }
 
     @GET
     @Path("/settings/session-sql")
     public void appendToInitSQL(@Suspended AsyncResponse asyncResponse)
     {
-        supplyAsync(()->"SELECT 1;").whenComplete(bindAsyncResponse(asyncResponse));
+        supplyAsync(() -> "SELECT 1;").whenComplete(bindAsyncResponse(asyncResponse));
     }
 
     @PUT
     @Path("/settings/session-sql")
     public void setSessionSQL(String sql, @Suspended AsyncResponse asyncResponse)
     {
-        supplyAsync(()->null).whenComplete(bindAsyncResponse(asyncResponse));
+        supplyAsync(() -> null).whenComplete(bindAsyncResponse(asyncResponse));
     }
 
     @PATCH
     @Path("/settings/session-sql")
     public void appendToSessionSQL(String sql, @Suspended AsyncResponse asyncResponse)
     {
-        supplyAsync(()->null).whenComplete(bindAsyncResponse(asyncResponse));
+        supplyAsync(() -> null).whenComplete(bindAsyncResponse(asyncResponse));
     }
 }
