@@ -6,5 +6,6 @@ package io.wren.main.connector.couchbase;
  * FROM INFORMATION_SCHEMA.COLUMNS;';
  */
 public record TableColumnMetadata(String tableCatalog, String tableSchema, String tableName, String columnName,
-                                  int ordinalPosition, boolean isNullable, String dataType) {
+                                  int ordinalPosition, boolean isNullable, String dataType)
+{
 }
