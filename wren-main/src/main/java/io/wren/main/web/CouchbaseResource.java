@@ -62,7 +62,8 @@ public class CouchbaseResource
                     data.add(iterator.next());
                 }
                 return new QueryResultDto(iterator.getColumns(), data.build());
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new WrenException(GENERIC_INTERNAL_ERROR, e.getMessage());
             }
