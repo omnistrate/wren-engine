@@ -61,7 +61,7 @@ public class CouchbaseMetadata
         client.execute(format("CREATE SCHEMA %s", name));
     }
 
-    public QueryResponse<TableColumnMetadata> getSchema()
+    public List<TableColumnMetadata> getSchema()
     {
         return client.getSchema();
     }

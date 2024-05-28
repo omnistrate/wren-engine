@@ -76,9 +76,8 @@ public class CouchbaseClient
      *       table_catalog, table_schema, table_name, column_name, ordinal_position, is_nullable, data_type\
      *       FROM INFORMATION_SCHEMA.COLUMNS;';
      */
-    public QueryResponse<TableColumnMetadata> getSchema()
+    public List<TableColumnMetadata> getSchema()
     {
-        List<TableColumnMetadata> data;
         try (Connection connection = createConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
             try (ResultSet tables = metaData.getTables(null, null, null, new String[] {"TABLE"})) {
@@ -97,8 +96,7 @@ public class CouchbaseClient
                         }
                     }
                 }
-                data = builder.build();
-                return new QueryResponse<>(data, TableColumnMetadata.getColumns());
+                return builder.build();
             }
         }
         catch (SQLException e) {
