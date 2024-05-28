@@ -13,14 +13,12 @@ RUN \
 ARG WREN_VERSION
 ENV ENV_WREN_VERSION=${WREN_VERSION}
 ENV WREN_JAR=wren-server-${ENV_WREN_VERSION}-executable.jar
-ENV LICENSE_FILE=cdata.jdbc.couchbase.lic
-
 
 COPY wren-sqlglot-server/ ./wren-sqlglot-server/
 RUN apt-get install -y python3 python3-pip
 RUN pip3 install -r ./wren-sqlglot-server/requirements.txt
 
-COPY cdata.jdbc.couchbase.lic ~/.CData/cdata.jdbc.couchbase.lic
+COPY cdata.jdbc.couchbase.lic /root/.CData/cdata.jdbc.couchbase.lic
 
 COPY entrypoint.sh ./
 RUN chmod +x ./entrypoint.sh
