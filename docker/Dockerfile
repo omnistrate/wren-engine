@@ -13,6 +13,7 @@ RUN \
 ARG WREN_VERSION
 ENV ENV_WREN_VERSION=${WREN_VERSION}
 ENV WREN_JAR=wren-server-${ENV_WREN_VERSION}-executable.jar
+COPY ${WREN_JAR} ./
 
 COPY wren-sqlglot-server/ ./wren-sqlglot-server/
 RUN apt-get install -y python3 python3-pip
