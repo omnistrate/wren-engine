@@ -92,8 +92,8 @@ public class CouchbaseClient
                             String dataType = columns.getString("DATA_TYPE");
                             builder.add(new TableColumnMetadata(
                                     "\"" + tableCatalog + "\"",
-                                    "\""+ tableSchema + "\"",
-                                    "\""+ tableName + "\"",
+                                    "\"" + tableSchema + "\"",
+                                    "\"" + tableName + "\"",
                                     columnName,
                                     ordinalPosition,
                                     isNullable,
