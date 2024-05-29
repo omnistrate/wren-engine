@@ -20,7 +20,6 @@ import io.wren.base.Column;
 import io.wren.base.Parameter;
 import io.wren.base.WrenException;
 import io.wren.base.config.CouchbaseConfig;
-import io.wren.connector.postgres.PostgresClient;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -39,7 +38,7 @@ import static java.util.Objects.requireNonNull;
 
 public class CouchbaseClient
 {
-    private static final Logger LOG = Logger.get(PostgresClient.class);
+    private static final Logger LOG = Logger.get(CouchbaseClient.class);
 
     private final CouchbaseConfig config;
 
@@ -91,7 +90,14 @@ public class CouchbaseClient
                             int ordinalPosition = columns.getInt("ORDINAL_POSITION");
                             boolean isNullable = columns.getBoolean("IS_NULLABLE");
                             String dataType = columns.getString("DATA_TYPE");
-                            builder.add(new TableColumnMetadata(tableCatalog, tableSchema, tableName, columnName, ordinalPosition, isNullable, dataType));
+                            builder.add(new TableColumnMetadata(
+                                    "\"" + tableCatalog + "\"",
+                                    "\""+ tableSchema + "\"",
+                                    "\""+ tableName + "\"",
+                                    columnName,
+                                    ordinalPosition,
+                                    isNullable,
+                                    dataType));
                         }
                     }
                 }
