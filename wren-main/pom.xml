@@ -20,6 +20,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>cdata.jdbc.couchbase</groupId>
+            <artifactId>CouchbaseDriver</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.carrotsearch</groupId>
@@ -163,6 +169,12 @@
             <artifactId>wren-cache</artifactId>
         </dependency>
 
+	<dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
@@ -270,12 +282,6 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>cdata.jdbc.couchbase</groupId>
-            <artifactId>CouchbaseDriver</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

@@ -21,7 +21,6 @@ import io.wren.base.Parameter;
 import io.wren.base.WrenException;
 import io.wren.base.config.CouchbaseConfig;
 import io.wren.connector.postgres.PostgresClient;
-import org.postgresql.Driver;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

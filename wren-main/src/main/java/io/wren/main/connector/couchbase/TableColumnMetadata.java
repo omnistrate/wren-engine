@@ -14,6 +14,6 @@ public record TableColumnMetadata(
         @JsonProperty("column_name") String columnName,
         @JsonProperty("ordinal_position") int ordinalPosition,
         @JsonProperty("is_nullable") boolean isNullable,
-        @JsonProperty("data_type") String dataType
-) {
+        @JsonProperty("data_type") String dataType)
+{
 }
