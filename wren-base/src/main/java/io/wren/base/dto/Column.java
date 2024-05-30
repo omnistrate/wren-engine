@@ -163,6 +163,11 @@ public class Column
 
     private static String quote(String name)
     {
+        // If the name is already quoted, don't quote it again
+        if (name.startsWith("\"") && name.endsWith("\"")) {
+            return name;
+        }
+
         return String.format("\"%s\"", name);
     }
 }
