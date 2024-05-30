@@ -77,6 +77,8 @@ public class CouchbaseClient
     public List<TableColumnMetadata> getSchema()
     {
         try (Connection connection = createConnection()) {
+            // Reset schema
+            connection.createStatement().execute("RESET SCHEMA CACHE");
             DatabaseMetaData metaData = connection.getMetaData();
             try (ResultSet tables = metaData.getTables(null, null, null, new String[] {"TABLE"})) {
                 ImmutableList.Builder<TableColumnMetadata> builder = ImmutableList.builder();
